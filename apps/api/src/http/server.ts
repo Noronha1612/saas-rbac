@@ -10,9 +10,12 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 
+import { errorHandler } from './error-handler'
 import { authModule } from './routes/auth/module'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+
+app.setErrorHandler(errorHandler)
 
 app.register(fastifySwagger, {
   openapi: {
