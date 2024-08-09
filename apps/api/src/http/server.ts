@@ -13,6 +13,7 @@ import {
 
 import { errorHandler } from './error-handler'
 import { authModule } from './routes/auth/module'
+import { organizationsModule } from './routes/orgs/module'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -52,6 +53,7 @@ app.setValidatorCompiler(validatorCompiler)
 app.register(fastifyCors)
 
 app.register(authModule)
+app.register(organizationsModule)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`Server listening on port: ${env.SERVER_PORT}`)
