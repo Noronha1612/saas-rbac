@@ -7,9 +7,9 @@ import { getProfile } from './get-profile'
 import { requestPasswordRecover } from './request-password-recover'
 
 export async function authModule(app: FastifyInstance) {
+  app.register(getProfile)
   app.register(createAccount)
   app.register(authenticateWithPassword)
   app.register(authenticateWithGithub)
-  app.register(getProfile)
   app.register(requestPasswordRecover)
 }
