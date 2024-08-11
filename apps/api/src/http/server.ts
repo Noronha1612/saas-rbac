@@ -13,6 +13,7 @@ import {
 
 import { errorHandler } from './error-handler'
 import { authModule } from './routes/auth/module'
+import { membersModule } from './routes/members/module'
 import { organizationsModule } from './routes/orgs/module'
 import { projectsModule } from './routes/projects/module'
 
@@ -56,6 +57,7 @@ app.register(fastifyCors)
 app.register(authModule)
 app.register(organizationsModule)
 app.register(projectsModule)
+app.register(membersModule)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`Server listening on port: ${env.SERVER_PORT}`)
