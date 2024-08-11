@@ -5,6 +5,7 @@ import { getMembership } from './get-membership'
 import { getOrganization } from './get-organization'
 import { getOrganizations } from './get-organizations'
 import { shutdownOrganization } from './shutdown-organization'
+import { transferOrganization } from './transfer-organization'
 import { updateOrganization } from './update-organization'
 
 export async function organizationsModule(app: FastifyInstance) {
@@ -14,4 +15,5 @@ export async function organizationsModule(app: FastifyInstance) {
   app.register(createOrganization)
   app.register(updateOrganization)
   app.register(shutdownOrganization)
+  app.register(transferOrganization)
 }
