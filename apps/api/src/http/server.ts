@@ -13,6 +13,7 @@ import {
 
 import { errorHandler } from './error-handler'
 import { authModule } from './routes/auth/module'
+import { billingModule } from './routes/billing/module'
 import { invitesModule } from './routes/invites/module'
 import { membersModule } from './routes/members/module'
 import { organizationsModule } from './routes/orgs/module'
@@ -60,6 +61,7 @@ app.register(organizationsModule)
 app.register(projectsModule)
 app.register(membersModule)
 app.register(invitesModule)
+app.register(billingModule)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log(`Server listening on port: ${env.SERVER_PORT}`)
