@@ -36,7 +36,7 @@ model Token {
   createdAt DateTime  @default(now()) @map("created_at")
   userId    String    @map("user_id")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens")
 }
@@ -51,7 +51,7 @@ model Account {
   providerAccountId String          @unique @map("provider_account_id")
   userId            String          @map("user_id")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, userId])
   @@map("accounts")
@@ -71,7 +71,7 @@ model Invite {
   authorId       String?  @map("author_id")
   organizationId String   @map("organization_id")
 
-  author       User?        @relation(fields: [authorId], references: [id])
+  author       User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([email, organizationId])
