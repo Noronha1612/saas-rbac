@@ -31,8 +31,8 @@ export async function authenticateWithGithub(app: FastifyInstance) {
 
       oauthUrl.searchParams.set('code', code)
       oauthUrl.searchParams.set('redirect_url', env.GITHUB_OAUTH_REDIRECT_URI)
-      oauthUrl.searchParams.set('clientId', env.GITHUB_OAUTH_CLIENT_ID)
-      oauthUrl.searchParams.set('secretId', env.GITHUB_OAUTH_SECRET_ID)
+      oauthUrl.searchParams.set('client_id', env.GITHUB_OAUTH_CLIENT_ID)
+      oauthUrl.searchParams.set('client_secret', env.GITHUB_OAUTH_SECRET_ID)
 
       const githubAccessTokenResponse = await fetch(oauthUrl, {
         method: 'POST',
