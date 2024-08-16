@@ -48,10 +48,24 @@ export async function createOrganization(app: FastifyInstance) {
           }
         }
 
+        const slug = createSlug(name)
+
+        const organizationWithSlug = await prisma.organization.findUnique({
+          where: {
+            slug,
+          },
+        })
+
+        if (organizationWithSlug) {
+          throw new BadRequestError(
+            'Organization with same name already exists.',
+          )
+        }
+
         const organization = await prisma.organization.create({
           data: {
             name,
-            slug: createSlug(name),
+            slug,
             domain,
             shouldAttachUsersByDomain,
             ownerId: userId,
