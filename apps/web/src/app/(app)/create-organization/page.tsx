@@ -1,6 +1,6 @@
 import { Header } from '@/components/page-utils/Header'
 
-import { OrganizationForm } from './OrganizationForm'
+import { OrganizationForm } from '../org/OrganizationForm'
 
 export default function CreateOrganization() {
   return (

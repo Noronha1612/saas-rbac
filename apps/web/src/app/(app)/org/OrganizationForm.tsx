@@ -10,12 +10,22 @@ import { Label } from '@/components/ui/label'
 import { Spinner } from '@/components/utils/Spinner'
 import { useFormState } from '@/hooks/useFormState'
 
-import { createOrganizationAction } from './actions'
+import { createOrganizationAction, updateOrganizationAction } from './actions'
+import { OrganizationSchema } from './schema'
 
-export function OrganizationForm() {
+interface OrganizationFormProps {
+  isUpdating?: boolean
+  initialData?: OrganizationSchema
+}
+
+export function OrganizationForm({
+  isUpdating = false,
+  initialData,
+}: OrganizationFormProps) {
   const [{ errors, message, success }, action, isPending] = useFormState(
-    createOrganizationAction,
+    isUpdating ? updateOrganizationAction : createOrganizationAction,
   )
+
   return (
     <form onSubmit={action} className="space-y-4">
       {success === false && message && (
@@ -40,7 +50,7 @@ export function OrganizationForm() {
 
       <div className="space-y-1">
         <Label htmlFor="name">Organization name</Label>
-        <Input name="name" id="name" />
+        <Input name="name" id="name" defaultValue={initialData?.name} />
 
         {errors?.name && (
           <p className="text-sm font-medium text-red-500 dark:text-red-400">
@@ -57,6 +67,7 @@ export function OrganizationForm() {
           id="domain"
           inputMode="url"
           placeholder="example.com"
+          defaultValue={initialData?.domain ?? undefined}
         />
 
         {errors?.domain && (
@@ -72,6 +83,7 @@ export function OrganizationForm() {
             name="shouldAttachUsersByDomain"
             id="shouldAttachUsersByDomain"
             className="translate-y-0.5"
+            defaultChecked={initialData?.shouldAttachUsersByDomain}
           />
           <label htmlFor="shouldAttachUsersByDomain" className="space-y-1">
             <span className="text-sm font-medium leading-none">
