@@ -9,6 +9,9 @@ import { getMembers } from '@/http/get-members'
 import { getMembership } from '@/http/get-membership'
 import { getOrganization } from '@/http/get-organization'
 
+import { RemoveMemberButton } from './RemoveMemberButton'
+import { UpdateMemberRoleSelect } from './UpdateMemberRoleSelect'
+
 export async function MemberList() {
   const permissions = await ability()
   const currentOrg = getCurrentOrgSlug()
@@ -70,12 +73,30 @@ export async function MemberList() {
 
                   <TableCell className="py-2.5">
                     <div className="flex items-center justify-end gap-2">
-                      {permissions?.can('transfer_ownership', authOrg) && (
-                        <Button size="sm" variant="ghost">
-                          <ArrowLeftRight className="mr-2 size-4" />
-                          Transfer ownership
-                        </Button>
+                      {permissions?.can('transfer_ownership', authOrg) &&
+                        !isMe && (
+                          <Button size="sm" variant="ghost">
+                            <ArrowLeftRight className="mr-2 size-4" />
+                            Transfer ownership
+                          </Button>
+                        )}
+
+                      {permissions?.can('delete', 'User') && !isMe && (
+                        <RemoveMemberButton
+                          disabled={isOwner}
+                          memberId={member.id}
+                        />
                       )}
+
+                      <UpdateMemberRoleSelect
+                        memberId={member.id}
+                        value={member.role}
+                        disabled={
+                          isOwner ||
+                          isMe ||
+                          permissions?.cannot('update', 'User')
+                        }
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

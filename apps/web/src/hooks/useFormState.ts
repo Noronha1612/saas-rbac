@@ -12,7 +12,7 @@ interface Options {
 }
 
 export function useFormState(
-  action: (data: FormData) => Promise<FormState>,
+  action: (data: FormData) => Promise<FormState | void>,
   { initialState, onSuccess }: Options = {},
 ) {
   const [isPending, startTransition] = useTransition()
@@ -33,11 +33,10 @@ export function useFormState(
     startTransition(async () => {
       const result = await action(data)
 
-      if (result.success && onSuccess) {
+      if (result?.success && onSuccess) {
         await onSuccess()
+        setFormState(result)
       }
-
-      setFormState(result)
     })
   }
 
