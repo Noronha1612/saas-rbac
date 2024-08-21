@@ -51,84 +51,90 @@ export async function authenticateWithGithub(app: FastifyInstance) {
         })
         .parse(githubAccessTokenData)
 
-      const githubUserResponse = await fetch(
-        new URL('https://api.github.com/user'),
-        {
-          headers: {
-            Authorization: `Bearer ${githubAccessToken}`,
+      try {
+        const githubUserResponse = await fetch(
+          new URL('https://api.github.com/user'),
+          {
+            headers: {
+              Authorization: `Bearer ${githubAccessToken}`,
+            },
           },
-        },
-      )
-
-      const githubUserData = await githubUserResponse.json()
-
-      const {
-        id: githubId,
-        name,
-        avatar_url: avatarUrl,
-        email,
-      } = z
-        .object({
-          id: z.number().int().transform(String),
-          avatar_url: z.string().url(),
-          name: z.string().nullable(),
-          email: z.string().email().nullable(),
-        })
-        .parse(githubUserData)
-
-      if (email === null) {
-        throw new BadRequestError(
-          'Your github account must have an email to authenticate',
         )
-      }
 
-      let user = await prisma.user.findUnique({
-        where: {
+        const githubUserData = await githubUserResponse.json()
+
+        console.log(githubUserData)
+
+        const {
+          id: githubId,
+          name,
+          avatar_url: avatarUrl,
           email,
-        },
-      })
+        } = z
+          .object({
+            id: z.number().int().transform(String),
+            avatar_url: z.string().url(),
+            name: z.string().nullable(),
+            email: z.string().email().nullable(),
+          })
+          .parse(githubUserData)
 
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            name,
+        if (email === null) {
+          throw new BadRequestError(
+            'Your github account must have an email to authenticate',
+          )
+        }
+
+        let user = await prisma.user.findUnique({
+          where: {
             email,
-            avatarUrl,
           },
         })
-      }
 
-      let account = await prisma.account.findUnique({
-        where: {
-          provider_userId: {
-            provider: 'GITHUB',
-            userId: user.id,
-          },
-        },
-      })
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              name,
+              email,
+              avatarUrl,
+            },
+          })
+        }
 
-      if (!account) {
-        account = await prisma.account.create({
-          data: {
-            provider: 'GITHUB',
-            providerAccountId: githubId,
-            userId: user.id,
+        let account = await prisma.account.findUnique({
+          where: {
+            provider_userId: {
+              provider: 'GITHUB',
+              userId: user.id,
+            },
           },
         })
-      }
 
-      const token = await rep.jwtSign(
-        {
-          sub: user.id,
-        },
-        {
-          sign: {
-            expiresIn: '7d',
+        if (!account) {
+          account = await prisma.account.create({
+            data: {
+              provider: 'GITHUB',
+              providerAccountId: githubId,
+              userId: user.id,
+            },
+          })
+        }
+
+        const token = await rep.jwtSign(
+          {
+            sub: user.id,
           },
-        },
-      )
+          {
+            sign: {
+              expiresIn: '7d',
+            },
+          },
+        )
 
-      return rep.status(201).send({ token })
+        return rep.status(201).send({ token })
+      } catch (err) {
+        console.log(err)
+      }
     },
   )
 }
