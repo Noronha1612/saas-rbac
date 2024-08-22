@@ -1,6 +1,7 @@
 import { ChevronDown, LogOut } from 'lucide-react'
 
 import { auth } from '@/auth/auth'
+import { getInitials } from '@/utils/get-initials'
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import {
@@ -9,16 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
-
-const getInitials = (name: string) => {
-  const initials = name
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join('')
-
-  return initials
-}
 
 export async function ProfileButton() {
   const { user } = await auth()
