@@ -66,4 +66,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  @layer components {
+    .tag-after {
+      @apply relative after:absolute after:-right-2 after:-top-2 after:flex after:h-5 after:w-5 after:items-center after:justify-center after:rounded-full after:bg-muted after:text-xs after:content-[attr(data-after)];
+    }
+  }
 }
